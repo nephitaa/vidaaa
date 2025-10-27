@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sobre Nós Dois</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&family=Dancing+Script:wght@400..700;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-data": "#e58c8a", // Cor principal da tela 1
+                        "primary-carta": "#daa520", // Cor principal da tela 2
+                        "background-data": "#0a192f", // Fundo da tela 1
+                        "background-carta": "#a2b9d4", // Fundo da tela 2
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue", "sans-serif"], 
+                        "display-carta": ["Playfair Display", "serif"],
+                        "script": ["Dancing Script", "cursive"] 
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Estilos da tela de Data (estrelas) */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Estilos da tela da Carta (tooltip) */
+        .font-handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .tooltip .tooltip-content {
+            visibility: hidden;
+            width: 260px;
+            background-color: #fdf6e3;
+            color: #343434;
+            text-align: center;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -130px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* OTIMIZAÇÃO DE RESPONSIVIDADE PARA SMARTPHONES (Tooltips) */
+        @media (max-width: 450px) {
+            .tooltip .tooltip-content {
+                width: 90vw; /* Largura adaptável */
+                left: 50%;
+                margin-left: 0;
+                transform: translateX(-50%); /* Centraliza */
+                max-width: 300px; 
+            }
+        }
+
+        /* Estilo para garantir que o fundo do corpo se adapte */
+        .bg-data {
+            background-color: #101922; /* Fundo original escuro da tela 1 */
+        }
+    </style>
+</head>
+
+<body class="bg-data dark:bg-background-data font-display transition-colors duration-500" id="main-body">
+
+<div id="tela-data" class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-hidden hidden">
+    <div class="absolute inset-0 z-0 overflow-hidden" id="stars-container"></div>
+    <div class="relative z-10 flex h-full min-h-screen grow flex-col items-center justify-center p-4">
+        <div class="layout-container flex h-full grow flex-col items-center justify-center">
+            <div class="layout-content-container flex flex-col max-w-[960px] flex-1 items-center justify-center text-center">
+                <h1 class="font-script text-white tracking-light text-5xl md:text-6xl font-bold leading-tight px-4 pb-8 pt-6">Qual foi o dia em que nós conhecemos?</h1>
+                <div class="flex w-full max-w-[400px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col flex-1"> <p class="text-white/80 text-base font-medium leading-normal pb-2 text-left">Data</p>
+                        <input id="data-input" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-[#ffd700] border border-white/20 bg-white/5 backdrop-blur-sm h-14 placeholder:text-white/40 p-[15px] text-base font-normal leading-normal transition-all duration-300" placeholder="DD/MM/AAAA" value=""/>
+                    </label>
+                </div>
+                <p id="feedback-mensagem" class="text-primary-data text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center h-6" style="visibility: hidden;">Mensagem de feedback.</p>
+                <div class="flex px-4 py-3 justify-center">
+                    <button id="revelar-button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-primary-data text-[#0a192f] hover:bg-opacity-90 transition-colors duration-300 gap-2 text-base font-bold leading-normal tracking-[0.015em]">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">favorite</span>
+                        <span class="truncate">Revelar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tela-carta" class="relative flex min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 md:p-8 font-display-carta hidden" style="background-color: #a2b9d4; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4oYh5A0JsVA8AHjvBZe4AI1espnaa_pSFnu-JcPd715l4qrh3MTKblAV8Iqum3m9hyBYaGqGzRtt_0A9jHBvDdCNj3CTZEo8rIrY0GmlV6uyxd8JrZ2AZtKcgdSXWHf4mInhCEejjVtYHLVJI6ge0whtks_fjSeyQ8WfciqwcrrqTyHIzWfYDybR0oi-uIrl3XnRjuGIKlB8V4Fhg9hqEPVlxpbg8D4WHoLdYErbbovF--ALucRcNfnQWMZPiscXYY61JQ0teuM0'); background-size: cover; background-position: center; background-attachment: fixed;">
+    
+    <audio id="musica-fundo" src="musica-fundo.mp3" loop></audio>
+
+    <div class="relative w-full max-w-2xl bg-[#fdf6e3] rounded-lg shadow-2xl p-8 sm:p-12 md:p-16 border-4 border-white/20">
+        <div class="absolute top-4 right-4">
+            <button id="music-button" class="group w-10 h-10 flex items-center justify-center rounded-full bg-primary-carta/20 hover:bg-primary-carta/30 transition-colors">
+                <span id="music-icon" class="material-symbols-outlined text-primary-carta text-xl group-hover:scale-110 transition-transform">
+                    play_arrow
+                </span>
+            </button>
+        </div>
+        <header class="text-center mb-10">
+            <h1 class="font-handwriting text-5xl sm:text-6xl text-primary-carta tracking-wide">Para Drii </h1>
+        </header>
+        <main class="space-y-6 text-lg leading-relaxed text-slate-800">
+            <p>
+                Você é uma pessoa incrível que, de repente, surgiu em minha vida. 
+                Sua beleza é única e magnética. Não me refiro àquela que apenas suscita um olhar fugaz e carnal, para ser esquecida em um minuto. A sua é a beleza que exige ser olhada diretamente e admirada, aquela que se instala na mente por dias, incômoda e inspiradora, fazendo-me até pensar em coisas que sei que não devo, mas que a alma teima em desejar.
+            </p>
+            <p>
+                Acredito que sou um homem apaixonado e sempre me esforcei em olhar as pessoas com amor. E confesso que a paixão, em outros tempos, já me trouxe mágoas dolorosas, fruto das minhas próprias idealizações. Há tantas coisas que gostaria de fazer com você, coisas que minha audácia ainda não permite sequer escrever (ksksk). Mas nem tudo me convém, eu sei, e essa tensão é o que me faz revirar na cama algumas vezes durante a noite.
+
+                <span class="tooltip">
+                    <span class="material-symbols-outlined text-primary-carta align-middle text-2xl transition hover:scale-125">favorite</span>
+                    <span class="tooltip-content not-italic font-normal">
+                        <img class="rounded-md w-full h-auto" data-alt="A close-up shot of a person's eyes sparkling with joy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA85IpZDwM37lZQYQbXAs4zlvCNfRLQijLksQbjtxGQ11nCIzeHSKLaAiq0YbYCvVqFhwe0cq_FYakBT99FEJ4wmPP1yg1XluOnpgv7e9J2vRlWq-ekjH0UziSGTEUkS-tqY8iEWtKWrK5ZspDWd5qoOlVk5RXMIMKBmHRJ5NFKjURzjOqeF1EpAn_1lz4AHZMEC9-uIlG1Ke21LMPk6r0qaKz8EW-gEvN48nLawrfnxcwPbFgwcEYcFMYXl1TLJISA9Jc82Lup_Sc"/>
+                    </span>
+                </span>
+                Sei que a nossa história, talvez, não tenha os traços do destino clássico, mas tenho a convicção de que ainda teremos muitos momentos especiais. Poderíamos, inclusive, imaginar juntos como seriam as coisas se as circunstâncias fossem completamente diferentes.
+            </p>
+            <p>
+                Os melhores relacionamentos não nascem da noite para o dia; eles são construídos. E tenho certeza de que o nosso, mesmo que não se materialize em um compromisso convencional, será um laço forte e incrivelmente profundo. Porque você me atravessa como a água de rio após uma tempestade: me preenche e me esvazia na mesma intensidade. Sinto isso por todo o meu corpo, desde a ponta dos dedos, no meu coração, no estômago, na pele e em outros lugares mais safados ksksksk.
+            </p>
+            <p>É por isso que a minha vontade mais sincera é ter você em minha vida. Seja em uma amizade com benefícios ou em um vínculo de pura e simples, mas valiosa, amizade. Em qualquer formato, sei que valerá a pena.
+            </p>
+        </main>
+        <footer class="mt-12 text-right">
+            <img alt="Signature" class="inline-block h-16 sm:h-20" data-alt="A handwritten signature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4oLmciT7_OBMXHUqtEtaXZTlZeqTgf0zqJVhDocX9tdx6zud3U16AcQZ4Z1eerdzeSQpnvsLbsCbFFbUcs6ru7PiS7TbjIJvIqjTLjsFFrel7n52N1gW9uGKX9-uEk-C8eG5h63hchDt04tlkF_XJ6RrzaYXE6iSgsjnpVjuaCfSSxu0lwHUfixGfVAke1UyQdaPFUGFpYl4_Tal0kybFunG8Km_chGrSxw2Nwj_vYe_hke72uNJE-1LRZVpgisJsOANIQYf7EcI"/>
+            <div class="mt-12 text-center">
+                <a class="inline-flex items-center gap-3 bg-primary-carta text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-primary-carta/50" href="https://wa.me/5565984150323?text=vc%2C%20gostou?%20Da%20carta." target="_blank">
+                    Nao sou bom com encerramentos, mas a conversa se prolonga no WhatsApp
+                    <span class="material-symbols-outlined">send</span>
+                </a>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    // ** CONFIGURAÇÃO **
+    const DATA_CORRETA = "13/10/2025"; // ⚠️ A data correta para a ativação da carta!
+
+    // Referências aos elementos
+    const body = document.getElementById('main-body');
+    const telaData = document.getElementById('tela-data');
+    const telaCarta = document.getElementById('tela-carta');
+    const dataInput = document.getElementById('data-input');
+    const revelarButton = document.getElementById('revelar-button');
+    const feedbackMensagem = document.getElementById('feedback-mensagem');
+
+    // Referências do Áudio
+    const music = document.getElementById('musica-fundo');
+    const musicButton = document.getElementById('music-button');
+    const musicIcon = document.getElementById('music-icon');
+    let isPlaying = false;
+
+    /**
+     * Alterna a visibilidade entre as duas telas.
+     * @param {string} telaParaMostrar - 'data' ou 'carta'.
+     */
+    function alternarTelas(telaParaMostrar) {
+        if (telaParaMostrar === 'data') {
+            telaData.classList.remove('hidden');
+            telaCarta.classList.add('hidden');
+            // Pausa a música ao voltar para a tela de data
+            if(isPlaying) {
+                music.pause();
+                musicIcon.textContent = 'play_arrow'; 
+                isPlaying = false;
+            }
+            // Mudar fundo do body para o tema da data
+            body.classList.remove('bg-background-carta', 'font-display-carta');
+            body.classList.add('bg-data', 'dark:bg-background-data', 'font-display');
+        } else if (telaParaMostrar === 'carta') {
+            telaData.classList.add('hidden');
+            telaCarta.classList.remove('hidden');
+            // Mudar fundo e fonte do body para o tema da carta
+            body.classList.remove('bg-data', 'dark:bg-background-data', 'font-display');
+            body.classList.add('bg-background-carta', 'font-display-carta');
+            body.parentElement.classList.remove('dark');
+        }
+    }
+
+    // Inicializa mostrando a tela de adivinhação
+    alternarTelas('data');
+
+
+    // Lógica do botão "Revelar"
+    revelarButton.addEventListener('click', () => {
+        const dataInserida = dataInput.value.trim();
+
+        if (dataInserida === DATA_CORRETA) {
+            // Sucesso! Mostra a carta.
+            feedbackMensagem.textContent = "Acertou! Meu bem, leia a carta.";
+            feedbackMensagem.style.visibility = 'visible';
+            feedbackMensagem.classList.add('text-green-400');
+            feedbackMensagem.classList.remove('text-primary-data');
+
+            // Tempo para o usuário ver o sucesso antes de mudar de tela
+            setTimeout(() => {
+                alternarTelas('carta');
+            }, 1500);
+
+        } else {
+            // Erro. Mostra a mensagem de "Tente outra vez".
+            feedbackMensagem.textContent = "não é tenta de novo (: ).";
+            feedbackMensagem.style.visibility = 'visible';
+            feedbackMensagem.classList.add('text-primary-data');
+            feedbackMensagem.classList.remove('text-green-400');
+        }
+    });
+
+    // Lógica de Controle de Música
+    if (musicButton) {
+        musicButton.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.textContent = 'play_arrow'; // Ícone de Play
+                isPlaying = false;
+            } else {
+                music.play().catch(error => {
+                    console.error("Autoplay bloqueado pelo navegador:", error);
+                    alert("O navegador bloqueou a reprodução. Clique no play novamente.");
+                });
+                musicIcon.textContent = 'pause'; // Ícone de Pause
+                isPlaying = true;
+            }
+        });
+    }
+
+
+    // Script para gerar as estrelas no fundo (tela 1)
+    const container = document.getElementById('stars-container');
+    const numStars = 100;
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${Math.random() * 5 + 3}s`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(star);
+    }
+</script>
+</body>
+</html>
